@@ -28,11 +28,11 @@
             </ul>
           </div>
           <div class="add-btn-group">
-            <div class="add-btn">
+            <div v-if="selectedCol !== 'backlog'" class="add-btn" @click="addBtn('backlog')">
               <span class="plus-sign">+</span>
               <span>Add Item</span>
             </div>
-            <div class="add-btn-solid">
+            <div v-if="selectedCol === 'backlog'" class="add-btn-solid" @click="saveBtn('backlog')">
               <span>Save Item</span>
             </div>
             <div class="add-container">
@@ -170,6 +170,7 @@ export default {
     this.getSavedColumn();
   },
 
+
   data() {
     return {
       backlogListArray: ["Relese the course", "Sit back and relax"],
@@ -179,9 +180,21 @@ export default {
       listArrays: [],
       draggedItem: null,
       currentColumn: null,
+      selectedCol:null,
     };
   },
   methods: {
+ addBtn(selectedCol){
+   this.selectedCol = selectedCol
+    console.log("selectedCol--!", selectedCol)
+  },
+  saveBtn(selectedCol){
+     this.selectedCol = null
+    console.log("bad raha hai ---!")
+  },
+
+
+
     drag(task, e) {
       const source = e.target.dataset.type;
       const value = e.target.textContent;

@@ -8,7 +8,13 @@
             <h1>Backlog</h1>
           </span>
           <div id="backlog-content" class="custom-scroll">
-            <ul class="drag-item-list"  id="backlog-list" @drop="drop($event)" @dragover="allowDrop" @dragenter="dragEnter(0)">
+            <ul
+              class="drag-item-list"
+              id="backlog-list"
+              @drop="drop($event)"
+              @dragover="allowDrop"
+              @dragenter="dragEnter(0)"
+            >
               <li
                 data-type="backlog"
                 class="drag-item"
@@ -41,10 +47,15 @@
             <h1>Progress</h1>
           </span>
           <div id="progress-content" class="custom-scroll">
-            <ul class="drag-item-list" id="progress-list" @drop="drop($event)" @dragover="allowDrop" @dragenter="dragEnter(1)">
+            <ul
+              class="drag-item-list"
+              id="progress-list"
+              @drop="drop($event)"
+              @dragover="allowDrop"
+              @dragenter="dragEnter(1)"
+            >
               <li
                 data-type="progress"
-
                 class="drag-item"
                 v-for="(task, index) in progressListArray"
                 :key="index"
@@ -75,10 +86,15 @@
             <h1>Complete</h1>
           </span>
           <div id="complete-content" class="custom-scroll">
-            <ul class="drag-item-list" id="complete-list" @drop="drop($event)" @dragover="allowDrop" @dragenter="dragEnter(2)">
+            <ul
+              class="drag-item-list"
+              id="complete-list"
+              @drop="drop($event)"
+              @dragover="allowDrop"
+              @dragenter="dragEnter(2)"
+            >
               <li
                 data-type="complete"
-
                 class="drag-item"
                 v-for="(task, index) in completeListArray"
                 :key="index"
@@ -109,10 +125,15 @@
             <h1>On-Hold</h1>
           </span>
           <div id="on-hold-content" class="custom-scroll">
-            <ul class="drag-item-list" id="on-hold-list" @drop="drop($event)" @dragover="allowDrop" @dragenter="dragEnter(3)">
+            <ul
+              class="drag-item-list"
+              id="on-hold-list"
+              @drop="drop($event)"
+              @dragover="allowDrop"
+              @dragenter="dragEnter(3)"
+            >
               <li
                 data-type="on-hold"
-
                 class="drag-item"
                 v-for="(task, index) in onHoldListArray"
                 :key="index"
@@ -138,8 +159,6 @@
         </li>
       </ul>
     </div>
-    {{ getSavedColumn() }}
-    {{ updateSaveColumn() }}
   </div>
 </template>
 
@@ -147,55 +166,111 @@
 export default {
   name: "App",
   components: {},
+  mounted() {
+    this.getSavedColumn();
+  },
 
   data() {
     return {
-      backlogListArray: [],
-      progressListArray: [],
-      completeListArray: [],
-      onHoldListArray: [],
+      backlogListArray: ["Relese the course", "Sit back and relax"],
+      progressListArray: ["Work on project", "Listen to music"],
+      completeListArray: ["Being cool", "Getting stuff done"],
+      onHoldListArray: ["Being uncool"],
       listArrays: [],
       draggedItem: null,
-      currentColumn:null,
+      currentColumn: null,
     };
   },
   methods: {
-  
     drag(task, e) {
       const source = e.target.dataset.type;
       const value = e.target.textContent;
-      this.draggedItem = {value:e.target.textContent, source: e.target.dataset.type};
-      console.log(source, value)
+      this.draggedItem = {
+        value: e.target.textContent,
+        source: e.target.dataset.type,
+      };
+      console.log(source, value);
     },
 
-    allowDrop(e){
-
-      e.preventDefault()
+    allowDrop(e) {
+      e.preventDefault();
     },
-    dragEnter(column){
-      
-      this.currentColumn = column
-      console.log(column)
+    dragEnter(column) {
+      this.currentColumn = column;
+      console.log(column);
     },
 
-
-    drop(e){ 
-     if(this.currentColumn == 0 ){
-       this.backlogListArray.push(this.draggedItem.value)
-     }else if(this.currentColumn == 1 ){
-       this.progressListArray.push(this.draggedItem.value)
-     }else if(this.currentColumn == 2 ){
-       this.completeListArray.push(this.draggedItem.value)
-     }else{
-       console.log('1 onHoldListArray   ', this.onHoldListArray)
-      //  this.onHoldListArray.push(this.draggedItem.value)
-       this.onHoldListArray  = [...this.onHoldListArray, this.draggedItem.value]
-
-       console.log('2 onHoldListArray   ', this.onHoldListArray)
-
-     }
-      console.log("droped")
-      e.preventDefault()
+    removeItem() {
+      console.log("tiku", this.draggedItem);
+      if (this.draggedItem.source == "backlog") {
+        this.backlogListArray = this.backlogListArray.filter(
+          (t) => t !== this.draggedItem.value
+        );
+        localStorage.setItem(
+          "backlogItem",
+          JSON.stringify(this.backlogListArray)
+        );
+      } else if (this.draggedItem.source == "progress") {
+        this.progressListArray = this.progressListArray.filter(
+          (t) => t !== this.draggedItem.value
+        );
+        localStorage.setItem(
+          "progressItem",
+          JSON.stringify(this.progressListArray)
+        );
+      } else if (this.draggedItem.source == "complete") {
+        this.completeListArray = this.completeListArray.filter(
+          (t) => t !== this.draggedItem.value
+        );
+        localStorage.setItem(
+          "completeItem",
+          JSON.stringify(this.completeListArray)
+        );
+      } else {
+        this.onHoldListArray = this.onHoldListArray.filter(
+          (t) => t !== this.draggedItem.value
+        );
+        localStorage.setItem(
+          "onHoldItem",
+          JSON.stringify(this.onHoldListArray)
+        );
+      }
+    },
+    drop(e) {
+      if (this.currentColumn == 0) {
+        this.backlogListArray.push(this.draggedItem.value);
+        this.removeItem();
+        localStorage.setItem(
+          "backlogItem",
+          JSON.stringify(this.backlogListArray)
+        );
+      } else if (this.currentColumn == 1) {
+        this.progressListArray.push(this.draggedItem.value);
+        this.removeItem();
+        localStorage.setItem(
+          "progressItem",
+          JSON.stringify(this.progressListArray)
+        );
+      } else if (this.currentColumn == 2) {
+        this.completeListArray.push(this.draggedItem.value);
+        this.removeItem();
+        localStorage.setItem(
+          "completeItem",
+          JSON.stringify(this.completeListArray)
+        );
+      } else {
+        this.onHoldListArray = [
+          ...this.onHoldListArray,
+          this.draggedItem.value,
+        ];
+        this.removeItem();
+        localStorage.setItem(
+          "onHoldItem",
+          JSON.stringify(this.onHoldListArray)
+        );
+      }
+      console.log("droped");
+      e.preventDefault();
     },
     getSavedColumn() {
       if (localStorage.getItem("backlogItem")) {
@@ -203,12 +278,6 @@ export default {
         this.progressListArray = JSON.parse(localStorage.progressItem);
         this.completeListArray = JSON.parse(localStorage.completeItem);
         this.onHoldListArray = JSON.parse(localStorage.onHoldItem);
-      } else {
-        console.log("else")
-        this.backlogListArray = ["Relese the course", "Sit back and relax"];
-        this.progressListArray = ["Work on project", "Listen to music"];
-        this.completeListArray = ["Being cool", "Getting stuff done"];
-        this.onHoldListArray = ["Being uncool"];
       }
     },
     updateSaveColumn() {

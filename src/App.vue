@@ -23,20 +23,41 @@
                 :draggable="true"
                 @dragstart="drag(task, $event)"
               >
+                <button
+                  class="delete"
+                  @click="remove('backlog', index)"
+                ></button>
                 {{ task }}
               </li>
             </ul>
           </div>
           <div class="add-btn-group">
-            <div v-if="selectedCol !== 'backlog'" class="add-btn" @click="addBtn('backlog')">
+            <div
+              v-if="selectedCol !== 'backlog'"
+              class="add-btn"
+              @click="addBtn('backlog')"
+            >
               <span class="plus-sign">+</span>
               <span>Add Item</span>
             </div>
-            <div v-if="selectedCol === 'backlog'" class="add-btn-solid" @click="saveBtn('backlog')">
-              <span>Save Item</span>
-            </div>
-            <div class="add-container">
-              <div class="add-item"></div>
+            <div class="save-container">
+              <div
+                v-if="selectedCol === 'backlog'"
+                class="add-btn-solid"
+                @click="saveBtn('backlog')"
+              >
+                <span>Save Item</span>
+              </div>
+              <div class="add-container" v-if="selectedCol === 'backlog'">
+                <div class="add-item">
+                  <textarea
+                    v-model="newTask"
+                    class="textArea"
+                    rows="5"
+                    cols="33"
+                  ></textarea>
+                </div>
+              </div>
             </div>
           </div>
         </li>
@@ -62,20 +83,41 @@
                 :draggable="true"
                 @dragstart="drag(task, $event)"
               >
+               <button
+                  class="delete"
+                  @click="remove('progress', index)"
+                ></button>
                 {{ task }}
               </li>
             </ul>
           </div>
           <div class="add-btn-group">
-            <div class="add-btn">
+            <div
+              v-if="selectedCol !== 'progress'"
+              class="add-btn"
+              @click="addBtn('progress')"
+            >
               <span class="plus-sign">+</span>
               <span>Add Item</span>
             </div>
-            <div class="add-btn-solid">
-              <span>Save Item</span>
-            </div>
-            <div class="add-container">
-              <div class="add-item"></div>
+            <div class="save-container">
+              <div
+                v-if="selectedCol === 'progress'"
+                class="add-btn-solid"
+                @click="saveBtn('progress')"
+              >
+                <span>Save Item</span>
+              </div>
+              <div class="add-container" v-if="selectedCol === 'progress'">
+                <div class="add-item">
+                  <textarea
+                    v-model="newTask"
+                    class="textArea"
+                    rows="5"
+                    cols="33"
+                  ></textarea>
+                </div>
+              </div>
             </div>
           </div>
         </li>
@@ -101,20 +143,41 @@
                 :draggable="true"
                 @dragstart="drag(task, $event)"
               >
+               <button
+                  class="delete"
+                  @click="remove('complete', index)"
+                ></button>
                 {{ task }}
               </li>
             </ul>
           </div>
           <div class="add-btn-group">
-            <div class="add-btn">
+            <div
+              v-if="selectedCol !== 'complete'"
+              class="add-btn"
+              @click="addBtn('complete')"
+            >
               <span class="plus-sign">+</span>
               <span>Add Item</span>
             </div>
-            <div class="add-btn-solid">
-              <span>Save Item</span>
-            </div>
-            <div class="add-container">
-              <div class="add-item"></div>
+            <div class="save-container">
+              <div
+                v-if="selectedCol === 'complete'"
+                class="add-btn-solid"
+                @click="saveBtn('complete')"
+              >
+                <span>Save Item</span>
+              </div>
+              <div class="add-container" v-if="selectedCol === 'complete'">
+                <div class="add-item">
+                  <textarea
+                    v-model="newTask"
+                    class="textArea"
+                    rows="5"
+                    cols="33"
+                  ></textarea>
+                </div>
+              </div>
             </div>
           </div>
         </li>
@@ -140,20 +203,41 @@
                 :draggable="true"
                 @dragstart="drag(task, $event)"
               >
+               <button
+                  class="delete"
+                  @click="remove('onhold', index)"
+                ></button>
                 {{ task }}
               </li>
             </ul>
           </div>
           <div class="add-btn-group">
-            <div class="add-btn">
+            <div
+              v-if="selectedCol !== 'onHold'"
+              class="add-btn"
+              @click="addBtn('onHold')"
+            >
               <span class="plus-sign">+</span>
               <span>Add Item</span>
             </div>
-            <div class="add-btn-solid">
-              <span>Save Item</span>
-            </div>
-            <div class="add-container">
-              <div class="add-item"></div>
+            <div class="save-container">
+              <div
+                v-if="selectedCol === 'onHold'"
+                class="add-btn-solid"
+                @click="saveBtn('onHold')"
+              >
+                <span>Save Item</span>
+              </div>
+              <div class="add-container" v-if="selectedCol === 'onHold'">
+                <div class="add-item">
+                  <textarea
+                    v-model="newTask"
+                    class="textArea"
+                    rows="5"
+                    cols="33"
+                  ></textarea>
+                </div>
+              </div>
             </div>
           </div>
         </li>
@@ -163,13 +247,13 @@
 </template>
 
 <script>
+// TODO: read
 export default {
   name: "App",
   components: {},
   mounted() {
     this.getSavedColumn();
   },
-
 
   data() {
     return {
@@ -180,32 +264,55 @@ export default {
       listArrays: [],
       draggedItem: null,
       currentColumn: null,
-      selectedCol:null,
+      selectedCol: null,
+      newTask: "",
     };
   },
   methods: {
- addBtn(selectedCol){
-   this.selectedCol = selectedCol
-    console.log("selectedCol--!", selectedCol)
-  },
-  saveBtn(selectedCol){
-     this.selectedCol = null
-    console.log("bad raha hai ---!")
-  },
+    addBtn(selectedCol) {
+      this.selectedCol = selectedCol;
+    },
+    saveBtn(selectedCol) {
+      this.selectedCol = null;
+      if (selectedCol == "backlog") {
+        this.backlogListArray.push(this.newTask);
+      } else if (selectedCol == "progress") {
+        this.progressListArray.push(this.newTask);
+      } else if (selectedCol == "complete") {
+        this.completeListArray.push(this.newTask);
+      } else {
+        this.onHoldListArray.push(this.newTask);
+      }
+      this.updateSaveColumn()
+    },
+    remove(selectedCol, i) {
+      console.log(selectedCol, i);
+      if (selectedCol == "backlog") {
+        this.backlogListArray.splice(i, 1);
+      } else if (selectedCol == "progress") {
+        this.progressListArray.splice(i, 1);
+      } else if (selectedCol == "complete") {
+        this.completeListArray.splice(i, 1);
+      } else {
+        this.onHoldListArray.splice(i, 1);
+      }
 
+      this.updateSaveColumn()
 
+    },
 
     drag(task, e) {
       const source = e.target.dataset.type;
       const value = e.target.textContent;
       this.draggedItem = {
-        value: e.target.textContent,
+        value: e.target.textContent.trim(),
         source: e.target.dataset.type,
       };
       console.log(source, value);
     },
 
     allowDrop(e) {
+      // TODO: read
       e.preventDefault();
     },
     dragEnter(column) {
@@ -214,15 +321,20 @@ export default {
     },
 
     removeItem() {
-      console.log("tiku", this.draggedItem);
       if (this.draggedItem.source == "backlog") {
+      console.log("removeItem-->", this.backlogListArray, this.draggedItem);
+
         this.backlogListArray = this.backlogListArray.filter(
           (t) => t !== this.draggedItem.value
-        );
+) 
+
+      console.log("removeItem 2-->", this.backlogListArray);
+
         localStorage.setItem(
           "backlogItem",
           JSON.stringify(this.backlogListArray)
         );
+
       } else if (this.draggedItem.source == "progress") {
         this.progressListArray = this.progressListArray.filter(
           (t) => t !== this.draggedItem.value
@@ -253,6 +365,7 @@ export default {
       if (this.currentColumn == 0) {
         this.backlogListArray.push(this.draggedItem.value);
         this.removeItem();
+        this.updateSaveColumn()
         localStorage.setItem(
           "backlogItem",
           JSON.stringify(this.backlogListArray)
@@ -286,6 +399,7 @@ export default {
       e.preventDefault();
     },
     getSavedColumn() {
+      // TODO: read
       if (localStorage.getItem("backlogItem")) {
         this.backlogListArray = JSON.parse(localStorage.backlogItem);
         this.progressListArray = JSON.parse(localStorage.progressItem);
@@ -347,6 +461,9 @@ h1 {
 .main-title {
   text-align: center;
   font-size: 3rem;
+}
+.add-btn-solid {
+  color: white;
 }
 
 ul {
@@ -508,7 +625,14 @@ ul {
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.9);
   min-height: 100px;
-  display: none;
+}
+.save-container {
+  display: flex;
+  flex-direction: column-reverse;
+}
+.add-btn-solid:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: black;
 }
 
 .add-item {
